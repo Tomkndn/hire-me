@@ -126,7 +126,7 @@ function InterviewHome({ params, searchParams }: Props) {
         const response = await ResponseService.getAllResponses(
           params.interviewId,
         );
-        if(response) {setResponses(response)};
+        if (response) { setResponses(response) };
         setLoading(true);
       } catch (error) {
         console.error(error);
