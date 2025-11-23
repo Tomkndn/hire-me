@@ -126,7 +126,7 @@ function InterviewHome({ params, searchParams }: Props) {
         const response = await ResponseService.getAllResponses(
           params.interviewId,
         );
-        setResponses(response);
+        if(response) {setResponses(response)};
         setLoading(true);
       } catch (error) {
         console.error(error);
@@ -261,286 +261,211 @@ function InterviewHome({ params, searchParams }: Props) {
           <LoaderWithText />
         </div>
       ) : (
-        <>
-          <div className="flex flex-row p-3 pt-4 justify-center gap-6 items-center sticky top-2 bg-white">
-            <div className="font-bold text-md">{interview?.name}</div>
+          <>
+            {/* Top Bar */}
+            <div className="flex flex-row p-4 justify-center gap-6 items-center sticky top-2 bg-white/80 backdrop-blur-sm shadow-sm rounded-lg border border-slate-200 mx-2 z-10">
 
-            <div
-              className="w-5 h-5 rounded-full border-2 border-white shadow"
-              style={{ backgroundColor: iconColor }}
-            />
+              {/* Interview Title */}
+              <div className="font-semibold text-lg">{interview?.name}</div>
 
-            <div className="flex flex-row gap-3 my-auto">
-              <UserIcon className="my-auto" size={16} />:{" "}
-              {String(responses?.length)}
+              {/* Theme Dot */}
+              <div
+                className="w-5 h-5 rounded-full border-[1.5px] border-white shadow-sm"
+                style={{ backgroundColor: iconColor }}
+              />
+
+              {/* Total Responses */}
+              <div className="flex flex-row gap-2 items-center text-sm">
+                <UserIcon size={16} />
+                {String(responses?.length)}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-1">
+                {/* Share */}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="bg-transparent hover:bg-indigo-50 text-indigo-600 shadow-none px-2 h-8"
+                        onClick={(e) => { e.stopPropagation(); openSharePopup(); }}
+                      >
+                        <Share2 size={16} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-white border shadow-sm text-black">
+                      Share
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                {/* Preview */}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="bg-transparent hover:bg-indigo-50 text-indigo-600 shadow-none px-2 h-8"
+                        onClick={(e) => { e.stopPropagation(); seeInterviewPreviewPage(); }}
+                      >
+                        <Eye size={16} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-white border shadow-sm text-black">
+                      Preview
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                {/* Color Picker */}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="bg-transparent hover:bg-indigo-50 text-indigo-600 shadow-none px-2 h-8"
+                        onClick={(e) => { e.stopPropagation(); setShowColorPicker(!showColorPicker); }}
+                      >
+                        <Palette size={18} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-white border shadow-sm text-black">
+                      Theme Color
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                {/* Edit */}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="bg-transparent hover:bg-indigo-50 text-indigo-600 shadow-none px-2 h-8"
+                        onClick={(e) => {
+                          router.push(`/interviews/${params.interviewId}?edit=true`);
+                        }}
+                      >
+                        <Pencil size={16} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-white border shadow-sm text-black">
+                      Edit
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+
+              {/* Toggle Active */}
+              <label className="inline-flex items-center cursor-pointer text-sm">
+                {currentPlan === "free_trial_over" ? (
+                  <>
+                    <span className="ms-2 text-gray-600">Inactive</span>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          ❔
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border shadow-sm text-black">
+                          Upgrade your plan to reactivate
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </>
+                ) : (
+                  <>
+                      <span className="ms-1">Active</span>
+                      <Switch
+                        checked={isActive}
+                      className={`ms-2 ${isActive ? "bg-indigo-600" : "bg-gray-300"}`}
+                      onCheckedChange={handleToggle}
+                    />
+                  </>
+                )}
+              </label>
             </div>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className={
-                      "bg-transparent shadow-none relative text-xs text-indigo-600 px-1 h-7 hover:scale-110 hover:bg-transparent"
-                    }
-                    variant={"secondary"}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      openSharePopup();
-                    }}
-                  >
-                    <Share2 size={16} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent
-                  className="bg-zinc-300"
-                  side="bottom"
-                  sideOffset={4}
-                >
-                  <span className="text-black flex flex-row gap-4">Share</span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="bg-transparent shadow-none text-xs text-indigo-600 px-0 h-7 hover:scale-110 relative"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      seeInterviewPreviewPage();
-                    }}
-                  >
-                    <Eye />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent
-                  className="bg-zinc-300"
-                  side="bottom"
-                  sideOffset={4}
-                >
-                  <span className="text-black flex flex-row gap-4">
-                    Preview
-                  </span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="bg-transparent shadow-none text-xs text-indigo-600 px-0 h-7 hover:scale-110 relative"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setShowColorPicker(!showColorPicker);
-                    }}
-                  >
-                    <Palette size={19} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent
-                  className="bg-zinc-300"
-                  side="bottom"
-                  sideOffset={4}
-                >
-                  <span className="text-black flex flex-row gap-4">
-                    Theme Color
-                  </span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="bg-transparent shadow-none text-xs text-indigo-600 px-0 h-7 hover:scale-110 relative"
-                    onClick={(event) => {
-                      router.push(
-                        `/interviews/${params.interviewId}?edit=true`,
-                      );
-                    }}
-                  >
-                    <Pencil size={16} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent
-                  className="bg-zinc-300"
-                  side="bottom"
-                  sideOffset={4}
-                >
-                  <span className="text-black flex flex-row gap-4">Edit</span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            {/* Layout */}
+            <div className="flex flex-row w-full p-2 h-[85%] gap-2">
 
-            <label className="inline-flex cursor-pointer">
-              {currentPlan == "free_trial_over" ? (
-                <>
-                  <span className="ms-3 my-auto text-sm">Inactive</span>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipContent
-                        className="bg-zinc-300"
-                        side="bottom"
-                        sideOffset={4}
-                      >
-                        Upgrade your plan to reactivate
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </>
-              ) : (
-                <>
-                  <span className="ms-3 my-auto text-sm">Active</span>
-                  <Switch
-                    checked={isActive}
-                    className={`ms-3 my-auto ${
-                      isActive ? "bg-indigo-600" : "bg-[#E6E7EB]"
-                    }`}
-                    onCheckedChange={handleToggle}
-                  />
-                </>
-              )}
-            </label>
-          </div>
-          <div className="flex flex-row w-full p-2 h-[85%] gap-1 ">
-            <div className="w-[20%] flex flex-col p-2 divide-y-2 rounded-sm border-2 border-slate-100">
-              <div className="flex w-full justify-center py-2">
-                <Select
-                  onValueChange={async (newValue: string) => {
-                    setFilterStatus(newValue);
-                  }}
-                >
-                  <SelectTrigger className="w-[95%] bg-slate-100 rounded-lg">
-                    <Filter size={18} className=" text-slate-400" />
+              {/* Sidebar */}
+              <div className="w-[20%] flex flex-col p-2 space-y-3 border border-slate-200 rounded-md bg-white/60 backdrop-blur-sm">
+
+                {/* Filter Dropdown */}
+                <Select onValueChange={(v: string) => setFilterStatus(v)}>
+                  <SelectTrigger className="w-full bg-slate-100 rounded-lg flex gap-2">
+                    <Filter size={18} className="text-slate-400" />
                     <SelectValue placeholder="Filter By" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={CandidateStatus.NO_STATUS}>
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 bg-gray-400 rounded-full mr-2" />
-                        No Status
-                      </div>
-                    </SelectItem>
-                    <SelectItem value={CandidateStatus.NOT_SELECTED}>
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 bg-red-500 rounded-full mr-2" />
-                        Not Selected
-                      </div>
-                    </SelectItem>
-                    <SelectItem value={CandidateStatus.POTENTIAL}>
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2" />
-                        Potential
-                      </div>
-                    </SelectItem>
-                    <SelectItem value={CandidateStatus.SELECTED}>
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 bg-green-500 rounded-full mr-2" />
-                        Selected
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="ALL">
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 border-2 border-gray-300 rounded-full mr-2" />
-                        All
-                      </div>
-                    </SelectItem>
+                    {[
+                      { label: "No Status", color: "bg-gray-400", value: CandidateStatus.NO_STATUS },
+                      { label: "Not Selected", color: "bg-red-500", value: CandidateStatus.NOT_SELECTED },
+                      { label: "Potential", color: "bg-yellow-500", value: CandidateStatus.POTENTIAL },
+                      { label: "Selected", color: "bg-green-500", value: CandidateStatus.SELECTED },
+                      { label: "All", color: "border border-gray-300", value: "ALL" },
+                    ].map(({ label, color, value }) => (
+                      <SelectItem key={value} value={value}>
+                        <div className="flex items-center">
+                          <div className={`w-3 h-3 rounded-full mr-2 ${color}`} />
+                          {label}
+                        </div>
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-              </div>
 
-              <ScrollArea className="h-full p-1 rounded-md border-none">
-                {filterResponses().length > 0 ? (
-                  filterResponses().map((response) => (
-                    <div
-                      className={`p-2 rounded-md hover:bg-indigo-100 border-2 my-1 text-left text-xs ${
-                        searchParams.call == response.call_id
-                          ? "bg-indigo-200"
-                          : "border-indigo-100"
-                      } flex flex-row justify-between cursor-pointer w-full`}
-                      key={response?.id}
-                      onClick={() => {
-                        router.push(
-                          `/interviews/${params.interviewId}?call=${response.call_id}`,
-                        );
-                        handleResponseClick(response);
-                      }}
-                    >
-                      <div className="flex flex-row gap-1 items-center w-full">
-                        {response.candidate_status === "NOT_SELECTED" ? (
-                          <div className="w-[5%] h-full bg-red-500 rounded-sm" />
-                        ) : response.candidate_status === "POTENTIAL" ? (
-                          <div className="w-[5%] h-full bg-yellow-500 rounded-sm" />
-                        ) : response.candidate_status === "SELECTED" ? (
-                          <div className="w-[5%] h-full bg-green-500 rounded-sm" />
-                        ) : (
-                          <div className="w-[5%] h-full bg-gray-400 rounded-sm" />
-                        )}
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex flex-col my-auto">
-                            <p className="font-medium mb-[2px]">
-                              {response?.name
-                                ? `${response?.name}'s Response`
-                                : "Anonymous"}
-                            </p>
-                            <p className="">
-                              {formatTimestampToDateHHMM(
-                                String(response?.created_at),
-                              )}
+                {/* Sidebar Responses */}
+                <ScrollArea className="h-full">
+                  {filterResponses().length > 0 ? (
+                    filterResponses().map((response) => (
+                      <div
+                        key={response.id}
+                        className={`p-3 text-xs border rounded-md flex gap-2 cursor-pointer
+                ${searchParams.call === response.call_id ? "bg-indigo-100 border-indigo-300" : "hover:bg-indigo-50 border-slate-200"}`}
+                        onClick={() => {
+                          router.push(`/interviews/${params.interviewId}?call=${response.call_id}`);
+                          handleResponseClick(response);
+                        }}
+                      >
+                        {/* Status Bar */}
+                        <div className={`w-1 rounded-sm ${response.candidate_status === "NOT_SELECTED" ? "bg-red-500" :
+                          response.candidate_status === "POTENTIAL" ? "bg-yellow-500" :
+                            response.candidate_status === "SELECTED" ? "bg-green-500" : "bg-gray-400"
+                          }`} />
+
+                        {/* Info */}
+                        <div className="flex justify-between w-full">
+                          <div>
+                            <p className="font-medium">{response?.name ? `${response?.name}` : "Anonymous"}</p>
+                            <p className="text-[10px] text-gray-600">
+                              {formatTimestampToDateHHMM(String(response?.created_at))}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center justify-center ml-auto flex-shrink-0">
-                            {!response.is_viewed && (
-                              <div className="w-4 h-4 flex items-center justify-center mb-1">
-                                <div className="text-indigo-500 text-xl leading-none">
-                                  ●
-                                </div>
-                              </div>
-                            )}
-                            <div
-                              className={`w-6 h-6 flex items-center justify-center ${
-                                response.is_viewed ? "h-full" : ""
-                              }`}
-                            >
-                              {response.analytics &&
-                                response.analytics.overallScore !==
-                                  undefined && (
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <div className="w-6 h-6 rounded-full bg-white border-2 border-indigo-500 flex items-center justify-center">
-                                          <span className="text-indigo-500 text-xs font-semibold">
-                                            {response?.analytics?.overallScore}
-                                          </span>
-                                        </div>
-                                      </TooltipTrigger>
-                                      <TooltipContent
-                                        className="bg-gray-500"
-                                        side="bottom"
-                                        sideOffset={4}
-                                      >
-                                        <span className="text-white font-normal flex flex-row gap-4">
-                                          Overall Score
-                                        </span>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                                )}
-                            </div>
-                          </div>
+
+                          {/* Score */}
+                          {response.analytics?.overallScore !== undefined && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="w-6 h-6 rounded-full border border-indigo-500 text-indigo-600 text-xs font-bold flex items-center justify-center">
+                                    {response.analytics.overallScore}
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-gray-700 text-white">
+                                  Overall Score
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center text-gray-500">
-                    No responses to display
-                  </p>
-                )}
-              </ScrollArea>
-            </div>
-            {responses && (
-              <div className="w-[85%] rounded-md ">
+                    ))
+                  ) : (
+                    <p className="text-center text-gray-500 text-sm py-6">No responses</p>
+                  )}
+                </ScrollArea>
+              </div>
+
+              {/* Right Panel */}
+              <div className="w-[80%] rounded-md overflow-hidden">
                 {searchParams.call ? (
                   <CallInfo
                     call_id={searchParams.call}
@@ -550,12 +475,12 @@ function InterviewHome({ params, searchParams }: Props) {
                 ) : searchParams.edit ? (
                   <EditInterview interview={interview} />
                 ) : (
-                  <SummaryInfo responses={responses} interview={interview} />
+                    <SummaryInfo responses={responses ?? []} interview={interview} />
                 )}
               </div>
-            )}
-          </div>
-        </>
+            </div>
+          </>
+
       )}
       <Modal
         open={showColorPicker}

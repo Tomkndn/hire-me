@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Image as LucideImage } from "lucide-react";
 import { Plus } from "lucide-react";
-import { CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Modal from "@/components/dashboard/Modal";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
@@ -53,19 +53,17 @@ const createInterviewerCard = () => {
 
   return (
     <>
-      {/* <Card
-        
+      <Card
         className="border-dashed border-gray-700 border-4 p-0 inline-block cursor-pointer hover:scale-105 ease-in-out duration-300 h-5 w-5 ml-1 mr-3 rounded-xl shrink-0 overflow-hidden shadow-md"
       >
         <CardContent className="p-0">
-          <div className="flex flex-col justify-center items-center w-full p-4 pb-0 mt-8 overflow-hidden">
+          <div className="flex flex-col justify-center items-center w-full p-4 pb-0 mt-8 overflow-hidden"/>
             
-          </div>
-          {/* <CardTitle className="p-0 m-2 mx-0 text-xs text-center">
+           <CardTitle className="p-0 m-2 mx-0 text-xs text-center">
             Add Interviewer
           </CardTitle> 
         </CardContent>
-      </Card> */}
+      </Card>
       <Plus
         size={30}
         strokeWidth={2}

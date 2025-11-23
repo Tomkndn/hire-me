@@ -64,31 +64,30 @@ function FileUpload({
   });
 
   return (
-    <div className="p-2 bg-white rounded-xl w-full h-24">
+    <div className="p-3 bg-white rounded-xl w-full shadow-sm border border-slate-200">
       {!isUploaded ? (
         <div
           {...getRootProps({
             className:
-              "border-dashed border-2 rounded-xl cursor-pointer bg-gray-50 py-4 flex justify-center items-center flex-col",
+              "border-2 border-dashed border-indigo-300 hover:border-indigo-500 transition-all duration-200 rounded-xl cursor-pointer bg-indigo-50/40 py-5 flex justify-center items-center flex-col",
           })}
         >
           <input {...getInputProps()} />
-          <>
-            <>
-              <Inbox className="w-8 h-8 text-blue-500" />
-              <p className="mt-2 text-sm text-slate-400">Drop PDF Here</p>
-            </>
-          </>
+          <Inbox className="w-9 h-9 text-indigo-500" />
+          <p className="mt-2 text-sm text-indigo-700 font-medium">
+            Drop PDF Here
+          </p>
+          <p className="text-xs text-slate-500 mt-1">or click to upload</p>
         </div>
       ) : (
-        <div className="text-left">
-          <p className="mt-2 text-sm text-slate-600">
-            File uploaded successfully. {fileName}
+        <div className="p-4 rounded-lg bg-green-50 border border-green-300">
+          <p className="text-sm text-green-800 font-medium">
+            📄 {fileName}
           </p>
-          <p className="mt-2 text-xs text-slate-600">
-            Do you want to{" "}
+          <p className="text-xs text-green-700 mt-1">
+            Uploaded successfully.{" "}
             <span
-              className="underline text-slate-950 cursor-pointer font-semibold"
+              className="underline text-indigo-700 cursor-pointer font-semibold"
               onClick={() => setIsUploaded(false)}
             >
               Reupload?
@@ -97,6 +96,7 @@ function FileUpload({
         </div>
       )}
     </div>
+
   );
 }
 

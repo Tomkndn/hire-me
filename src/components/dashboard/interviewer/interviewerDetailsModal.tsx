@@ -10,13 +10,21 @@ interface Props {
 
 function InterviewerDetailsModal({ interviewer }: Props) {
   return (
-    <div className="text-center w-[40rem]">
-      <CardTitle className="text-3xl text mt-0 p-0 font-semibold ">
+    <div className="text-center w-[40rem] mx-auto">
+      {/* Name */}
+      <CardTitle className="text-3xl font-bold text-gray-800 tracking-tight">
         {interviewer?.name}
       </CardTitle>
-      <div className="mt-1 p-2 flex flex-col justify-center items-center">
-        <div className="flex flex-row justify-center space-x-10 items-center">
-          <div className=" flex items-center justify-center border-4 overflow-hidden border-gray-500 rounded-xl h-48 w-44">
+
+      <div className="mt-4 p-4 flex flex-col justify-center items-center bg-white/60 backdrop-blur-sm 
+                  border border-indigo-100 rounded-xl shadow-md">
+        {/* Image + Description */}
+        <div className="flex flex-row justify-center space-x-10 items-start">
+
+          {/* Profile Image */}
+          <div className="relative flex items-center justify-center border-4 border-indigo-300 
+                      overflow-hidden rounded-xl h-48 w-44 shadow-lg hover:shadow-indigo-300/40 
+                      hover:scale-105 transition-transform duration-300 ease-in-out">
             <Image
               src={interviewer?.image || ""}
               alt="Picture of the interviewer"
@@ -25,78 +33,92 @@ function InterviewerDetailsModal({ interviewer }: Props) {
               className="w-full h-full object-cover object-center"
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <p className="text-sm leading-relaxed  mt-0 whitespace-normal w-[25rem] text-justify">
+
+          {/* Description + Audio */}
+          <div className="flex flex-col gap-3 text-left">
+            <p className="text-sm leading-relaxed whitespace-normal w-[25rem] text-justify text-gray-700">
               {interviewer?.description}
             </p>
+
             {interviewer?.audio && (
-              <ReactAudioPlayer src={`/audio/${interviewer.audio}`} controls />
+              <div className="mt-2 w-full p-2 rounded-md bg-white/40 border border-indigo-200 shadow-sm">
+                <ReactAudioPlayer src={`/audio/${interviewer.audio}`} controls />
+              </div>
             )}
           </div>
+
         </div>
-        <h3 className="text-mg m-0 p-0 mt-5 ml-0 font-medium">
-          Interviewer Settings:
+
+        {/* Settings */}
+        <h3 className="text-lg font-semibold mt-6 text-gray-800">
+          Interviewer Settings
         </h3>
-        <div className="flex flex-row space-x-14 justify-center items-start">
-          <div className=" mt-2 flex flex-col justify-start items-start">
-            <div className="flex flex-row justify-between items-center mb-2">
-              <h4 className="w-20 text-left">Empathy</h4>
-              <div className="w-40 space-x-3 ml-3 flex justify-between items-center">
+
+        <div className="flex flex-row space-x-16 justify-center items-start mt-4">
+
+          {/* Col 1 */}
+          <div className="flex flex-col gap-3">
+            {/* Empathy */}
+            <div className="flex items-center justify-between w-60">
+              <span className="font-medium text-sm w-24 text-left text-gray-700">Empathy</span>
+              <div className="flex items-center gap-3 w-36">
                 <Slider
                   value={[(interviewer?.empathy || 10) / 10]}
                   max={1}
                   step={0.1}
+                  className="accent-indigo-600"
                 />
-                <span className="w-8 text-left">
-                  {(interviewer?.empathy || 10) / 10}
-                </span>
+                <span className="text-xs">{(interviewer?.empathy || 10) / 10}</span>
               </div>
             </div>
-            <div className="flex flex-row justify-between items-center ">
-              <h4 className="w-20 text-left">Rapport</h4>
-              <div className="w-40 space-x-3 ml-3 flex justify-between items-center">
+
+            {/* Rapport */}
+            <div className="flex items-center justify-between w-60">
+              <span className="font-medium text-sm w-24 text-left text-gray-700">Rapport</span>
+              <div className="flex items-center gap-3 w-36">
                 <Slider
                   value={[(interviewer?.rapport || 10) / 10]}
                   max={1}
                   step={0.1}
                 />
-                <span className="w-8 text-left">
-                  {(interviewer?.rapport || 10) / 10}
-                </span>
+                <span className="text-xs">{(interviewer?.rapport || 10) / 10}</span>
               </div>
             </div>
           </div>
-          <div className=" mt-2 flex flex-col justify-start items-start">
-            <div className="flex flex-row justify-between items-center mb-2">
-              <h4 className="w-20 text-left">Exploration</h4>
-              <div className="w-40 space-x-3 ml-3 flex justify-between items-center">
+
+          {/* Col 2 */}
+          <div className="flex flex-col gap-3">
+            {/* Exploration */}
+            <div className="flex items-center justify-between w-60">
+              <span className="font-medium text-sm w-24 text-left text-gray-700">Exploration</span>
+              <div className="flex items-center gap-3 w-36">
                 <Slider
                   value={[(interviewer?.exploration || 10) / 10]}
                   max={1}
                   step={0.1}
                 />
-                <span className="w-8 text-left">
-                  {(interviewer?.exploration || 10) / 10}
-                </span>
+                <span className="text-xs">{(interviewer?.exploration || 10) / 10}</span>
               </div>
             </div>
-            <div className="flex flex-row justify-between items-center ">
-              <h4 className="w-20 text-left">Speed</h4>
-              <div className="w-40 space-x-3 ml-3 flex justify-between items-center">
+
+            {/* Speed */}
+            <div className="flex items-center justify-between w-60">
+              <span className="font-medium text-sm w-24 text-left text-gray-700">Speed</span>
+              <div className="flex items-center gap-3 w-36">
                 <Slider
                   value={[(interviewer?.speed || 10) / 10]}
                   max={1}
                   step={0.1}
                 />
-                <span className="w-8 text-left">
-                  {(interviewer?.speed || 10) / 10}
-                </span>
+                <span className="text-xs">{(interviewer?.speed || 10) / 10}</span>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
+
   );
 }
 

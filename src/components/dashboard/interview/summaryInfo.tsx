@@ -173,111 +173,99 @@ function SummaryInfo({ responses, interview }: SummaryProps) {
   return (
     <div className="h-screen z-[10] mx-2">
       {responses.length > 0 ? (
-        <div className="bg-slate-200 rounded-2xl min-h-[120px] p-2 ">
-          <div className="flex flex-row gap-2 justify-between items-center mx-2">
-            <div className="flex flex-row gap-2 items-center">
-              <p className="font-semibold my-2">Overall Analysis</p>
-            </div>
-            <p className="text-sm">
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 min-h-[120px] p-4">
+
+          {/* Header */}
+          <div className="flex flex-row justify-between items-center mb-2 px-1">
+            <p className="font-semibold text-lg text-slate-800">Overall Analysis</p>
+            <p className="text-sm text-slate-600">
               Interviewer used:{" "}
-              <span className="font-medium">{interviewer?.name}</span>
+              <span className="font-semibold text-slate-800">{interviewer?.name}</span>
             </p>
           </div>
-          <p className="my-3 ml-2 text-sm">
+
+          {/* Description */}
+          <p className="my-3 ml-1 text-sm text-slate-600">
             Interview Description:{" "}
-            <span className="font-medium">{interview?.description}</span>
+            <span className="font-medium text-slate-800">{interview?.description}</span>
           </p>
-          <div className="flex flex-col gap-1 my-2 mt-4 mx-2 p-4 rounded-2xl bg-slate-50 shadow-md">
+
+          {/* Table Section */}
+          <div className="flex flex-col gap-1 my-2 mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm">
             <ScrollArea className="h-[250px]">
               <DataTable data={tableData} interviewId={interview?.id || ""} />
             </ScrollArea>
           </div>
-          <div className="flex flex-row gap-1 my-2 justify-center">
-            <div className="flex flex-col">
-              <div className="flex flex-col gap-1 my-2 mt-4 mx-2 p-3 rounded-2xl bg-slate-50 shadow-md max-w-[400px]">
-                <div className="flex flex-row items-center justify-center gap-1 font-semibold mb-1 text-[15px]">
+
+          {/* Stats + Charts Section */}
+          <div className="flex flex-row gap-3 mt-3 justify-center flex-wrap">
+
+            {/* Column - Duration + Completion Rate */}
+            <div className="flex flex-col gap-3">
+
+              {/* Avg Duration */}
+              <div className="p-4 rounded-2xl bg-white shadow-sm border border-slate-200 max-w-[360px] flex flex-col items-center">
+                <div className="flex gap-1 items-center font-semibold text-[15px] text-slate-800 mb-1">
                   Average Duration
                   <InfoTooltip content="Average time users took to complete an interview" />
                 </div>
-                <div className="flex items-center justify-center">
-                  <p className="text-2xl font-semibold text-indigo-600 w-fit p-1 px-2 bg-indigo-100 rounded-md">
-                    {convertSecondstoMMSS(totalDuration / responses.length)}
-                  </p>
-                </div>
+                <p className="text-2xl font-semibold text-indigo-600 px-3 py-1 bg-indigo-100 rounded-md">
+                  {convertSecondstoMMSS(totalDuration / responses.length)}
+                </p>
               </div>
-              <div className="flex flex-col items-center justify-center gap-1 mx-2 p-3 rounded-2xl bg-slate-50 shadow-md max-w-[360px]">
-                <div className="flex flex-row gap-1 font-semibold mb-1 text-[15px] mx-auto text-center">
+
+              {/* Completion Rate */}
+              <div className="p-4 rounded-2xl bg-white shadow-sm border border-slate-200 max-w-[360px] flex flex-col items-center">
+                <div className="flex gap-1 items-center font-semibold text-[15px] text-slate-800 mb-1 text-center">
                   Interview Completion Rate
                   <InfoTooltip content="Percentage of interviews completed successfully" />
                 </div>
-                <p className="w-fit text-2xl font-semibold text-indigo-600  p-1 px-2 bg-indigo-100 rounded-md">
-                  {Math.round(
-                    (completedInterviews / responses.length) * 10000,
-                  ) / 100}
-                  %
+                <p className="text-2xl font-semibold text-indigo-600 px-3 py-1 bg-indigo-100 rounded-md">
+                  {Math.round((completedInterviews / responses.length) * 10000) / 100}%
                 </p>
               </div>
             </div>
-            <div className="flex flex-col gap-1 my-2 mt-4 mx-2 p-4 rounded-2xl bg-slate-50 shadow-md max-w-[360px]">
-              <div className="flex flex-row gap-2 text-[15px] font-bold mb-3 mx-auto">
+
+            {/* Chart - Sentiment */}
+            <div className="p-5 rounded-2xl bg-white shadow-sm border border-slate-200 max-w-[360px]">
+              <div className="flex gap-2 font-bold text-[15px] text-slate-800 mb-2 mx-auto">
                 <SmileIcon />
                 Candidate Sentiment
                 <InfoTooltip content="Distribution of user sentiments during interviews" />
               </div>
               <PieChart
                 sx={{
-                  "& .MuiChartsLegend-series text": {
-                    fontSize: "0.8rem !important",
-                  },
+                  "& .MuiChartsLegend-series text": { fontSize: "0.8rem !important" },
                 }}
                 series={[
                   {
                     data: [
-                      {
-                        id: 0,
-                        value: sentimentCount.positive,
-                        label: `Positive (${sentimentCount.positive})`,
-                        color: "#22c55e",
-                      },
-                      {
-                        id: 1,
-                        value: sentimentCount.neutral,
-                        label: `Neutral (${sentimentCount.neutral})`,
-                        color: "#eab308",
-                      },
-                      {
-                        id: 2,
-                        value: sentimentCount.negative,
-                        label: `Negative (${sentimentCount.negative})`,
-                        color: "#eb4444",
-                      },
+                      { id: 0, value: sentimentCount.positive, label: `Positive (${sentimentCount.positive})`, color: "#22c55e" },
+                      { id: 1, value: sentimentCount.neutral, label: `Neutral (${sentimentCount.neutral})`, color: "#eab308" },
+                      { id: 2, value: sentimentCount.negative, label: `Negative (${sentimentCount.negative})`, color: "#eb4444" },
                     ],
                     highlightScope: { faded: "global", highlighted: "item" },
-                    faded: {
-                      innerRadius: 10,
-                      additionalRadius: -10,
-                      color: "gray",
-                    },
+                    faded: { innerRadius: 10, additionalRadius: -10, color: "gray" },
                   },
                 ]}
                 width={360}
                 height={120}
               />
             </div>
-            <div className="flex flex-col gap-1 my-2 mt-4 mx-2 p-4 rounded-2xl bg-slate-50 shadow-md">
-              <div className="flex flex-row gap-2 text-[15px] font-bold mx-auto mb-1">
+
+            {/* Chart - Candidate Status */}
+            <div className="p-5 rounded-2xl bg-white shadow-sm border border-slate-200 max-w-[360px]">
+              <div className="flex gap-2 font-bold text-[15px] text-slate-800 mb-1 mx-auto">
                 <UserCircleIcon />
                 Candidate Status
                 <InfoTooltip content="Breakdown of the candidate selection status" />
               </div>
-              <div className="text-sm text-center mb-1">
+              <div className="text-sm text-center text-slate-600 mb-1">
                 Total Responses: {totalResponses}
               </div>
               <PieChart
                 sx={{
-                  "& .MuiChartsLegend-series text": {
-                    fontSize: "0.8rem !important",
-                  },
+                  "& .MuiChartsLegend-series text": { fontSize: "0.8rem !important" },
                 }}
                 series={[
                   {
@@ -296,8 +284,7 @@ function SummaryInfo({ responses, interview }: SummaryProps) {
                       },
                       {
                         id: 2,
-                        value:
-                          candidateStatusCount[CandidateStatus.NOT_SELECTED],
+                        value: candidateStatusCount[CandidateStatus.NOT_SELECTED],
                         label: `Not Selected (${candidateStatusCount[CandidateStatus.NOT_SELECTED]})`,
                         color: "#eb4444",
                       },
@@ -309,46 +296,25 @@ function SummaryInfo({ responses, interview }: SummaryProps) {
                       },
                     ],
                     highlightScope: { faded: "global", highlighted: "item" },
-                    faded: {
-                      innerRadius: 10,
-                      additionalRadius: -10,
-                      color: "gray",
-                    },
+                    faded: { innerRadius: 10, additionalRadius: -10, color: "gray" },
                   },
                 ]}
                 width={360}
                 height={120}
-                slotProps={{
-                  legend: {
-                    direction: "column",
-                    position: { vertical: "middle", horizontal: "right" },
-                    padding: 0,
-                    itemMarkWidth: 10,
-                    itemMarkHeight: 10,
-                    markGap: 5,
-                    itemGap: 5,
-                  },
-                }}
               />
             </div>
           </div>
         </div>
       ) : (
         <div className="w-[85%] h-[60%] flex flex-col items-center justify-center">
-          <div className="flex flex-col items-center">
-            <Image
-              src="/no-responses.png"
-              alt="logo"
-              width={270}
-              height={270}
-            />
-            <p className="text-center text-sm mt-0">
-              Please share with your intended respondents
-            </p>
-          </div>
+          <Image src="/no-responses.png" alt="logo" width={270} height={270} />
+          <p className="text-center text-sm mt-1 text-slate-500">
+            Please share with your intended respondents
+          </p>
         </div>
       )}
     </div>
+
   );
 }
 

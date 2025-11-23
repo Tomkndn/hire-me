@@ -37,56 +37,57 @@ function Interviewers() {
   }
 
   return (
-    <main className="p-8 pt-0 ml-12 mr-auto rounded-md">
-      <div className="flex flex-col items-left">
-        <div className="flex flex-row mt-5">
-          <div>
-            <h2 className="mr-2 text-2xl font-semibold tracking-tight mt-3">
-              Interviewers
-            </h2>
-            <h3 className=" text-sm tracking-tight text-gray-600 font-medium ">
-              Get to know them by clicking the profile.
-            </h3>
-          </div>
+    <main className="p-8 pt-0 ml-12 mr-auto rounded-md select-none">
+      <div className="flex flex-col">
+
+        {/* Section Header */}
+        <div className="mt-5">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Interviewers
+          </h2>
+          <p className="text-sm tracking-tight text-gray-500 font-medium">
+            Click a profile to view their expertise and details.
+          </p>
         </div>
-        <div className="relative flex items-center mt-2 ">
+
+        {/* Cards Slider */}
+        <div className="relative flex items-center mt-4">
           <div
             id="slider"
-            className=" h-44 pt-2 overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide w-[40rem]"
+            className="h-44 pt-2 overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide w-[40rem]"
           >
-            {interviewers.length === 0 ? <CreateInterviewerButton /> : <></>}
+            {interviewers.length === 0 && <CreateInterviewerButton />}
+
             {!interviewersLoading ? (
               <>
                 {interviewers.map((interviewer) => (
-                  <InterviewerCard
-                    key={interviewer.id}
-                    interviewer={interviewer}
-                  />
+                  <InterviewerCard key={interviewer.id} interviewer={interviewer} />
                 ))}
               </>
             ) : (
               <InterviewersLoader />
             )}
           </div>
-          {interviewers.length > 4 ? (
-            <div className="flex-row justify-center items-center space-y-10">
+
+          {/* Scroll Controls */}
+          {interviewers.length > 4 && (
+            <div className="flex flex-col justify-center items-center space-y-10 ml-3">
               <ChevronRight
-                className="opacity-50 cursor-pointer hover:opacity-100"
-                size={40}
+                className="opacity-40 hover:opacity-90 text-indigo-600 hover:text-indigo-700 cursor-pointer transition"
+                size={38}
                 onClick={slideRight}
               />
               <ChevronLeft
-                className="opacity-50 cursor-pointer hover:opacity-100"
-                size={40}
-                onClick={() => slideLeft()}
+                className="opacity-40 hover:opacity-90 text-indigo-600 hover:text-indigo-700 cursor-pointer transition"
+                size={38}
+                onClick={slideLeft}
               />
             </div>
-          ) : (
-            <></>
           )}
         </div>
       </div>
     </main>
+
   );
 }
 

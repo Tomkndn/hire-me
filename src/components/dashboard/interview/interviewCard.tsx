@@ -114,47 +114,56 @@ function InterviewCard({ name, interviewerId, id, url, readableSlug }: Props) {
         cursor: isFetching ? "default" : "pointer",
       }}
     >
-      <Card className="relative p-0 mt-4 inline-block cursor-pointer h-60 w-56 ml-1 mr-3 rounded-xl shrink-0 overflow-hidden shadow-md">
+      <Card className="relative p-0 mt-4 inline-block cursor-pointer h-60 w-56 ml-1 mr-3 rounded-xl shrink-0 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
         <CardContent className={`p-0 ${isFetching ? "opacity-60" : ""}`}>
-          <div className="w-full h-40 overflow-hidden bg-indigo-600 flex items-center text-center">
-            <CardTitle className="w-full mt-3 mx-2 text-white text-lg">
+          {/* Header */}
+          <div className="w-full h-40 overflow-hidden bg-gradient-to-r from-indigo-600 to-indigo-500 flex items-center justify-center text-center">
+            <CardTitle className="w-full mt-3 px-2 text-white text-lg font-semibold drop-shadow-sm">
               {name}
               {isFetching && (
-                <div className="z-100 mt-[-5px]">
+                <div className="z-100 mt-[-5px] flex justify-center">
                   <MiniLoader />
                 </div>
               )}
             </CardTitle>
           </div>
-          <div className="flex flex-row items-center mx-4 ">
-            <div className="w-full overflow-hidden">
+
+          {/* Bottom Section */}
+          <div className="flex flex-row items-center justify-between px-3 py-2">
+            {/* Interviewer Image */}
+            <div className="flex-shrink-0 rounded-full border-2 border-indigo-300 p-[2px] overflow-hidden w-14 h-14">
               <Image
                 src={img}
-                alt="Picture of the interviewer"
-                width={70}
-                height={70}
-                className="object-cover object-center"
+                alt="Interviewer"
+                width={60}
+                height={60}
+                className="w-full h-full object-cover rounded-full"
               />
             </div>
-            <div className="text-black text-sm font-semibold mt-2 mr-2 whitespace-nowrap">
-              Responses:{" "}
-              <span className="font-normal">
+
+            {/* Responses */}
+            <div className="ml-2 text-black text-sm font-medium">
+              <span className="text-slate-600 font-normal block text-xs">
+                Responses
+              </span>
+              <span className="text-indigo-700 font-bold text-lg">
                 {responseCount?.toString() || 0}
               </span>
             </div>
           </div>
+
+          {/* Top-right Actions */}
           <div className="absolute top-2 right-2 flex gap-1">
             <Button
-              className="text-xs text-indigo-600 px-1 h-6"
+              className="text-xs text-indigo-600 px-1 h-6 shadow-sm hover:bg-indigo-50"
               variant={"secondary"}
               onClick={handleJumpToInterview}
             >
               <ArrowUpRight size={16} />
             </Button>
             <Button
-              className={`text-xs text-indigo-600 px-1 h-6  ${
-                copied ? "bg-indigo-300 text-white" : ""
-              }`}
+              className={`text-xs px-1 h-6 shadow-sm ${copied ? "bg-indigo-500 text-white" : "text-indigo-600 hover:bg-indigo-50"
+                }`}
               variant={"secondary"}
               onClick={(event) => {
                 event.stopPropagation();
@@ -168,6 +177,7 @@ function InterviewCard({ name, interviewerId, id, url, readableSlug }: Props) {
         </CardContent>
       </Card>
     </a>
+
   );
 }
 

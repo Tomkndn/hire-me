@@ -143,91 +143,106 @@ function DetailsPopup({
 
   return (
     <>
-      <div className="text-center w-[38rem]">
-        <h1 className="text-xl font-semibold">Create an Interview</h1>
-        <div className="flex flex-col justify-center items-start mt-4 ml-10 mr-8">
-          <div className="flex flex-row justify-center items-center">
-            <h3 className="text-sm font-medium">Interview Name:</h3>
+      <div className="text-center w-[40rem]">
+        {/* Title */}
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
+          Create an Interview
+        </h1>
+
+        <div className="flex flex-col justify-center items-start mt-6 ml-10 mr-8 max-h-[75vh] overflow-y-auto pr-2 pb-4 pt-36">
+
+          {/* Interview Name */}
+          <div className="flex flex-col w-full">
+            <label className="text-sm font-medium text-gray-700 mb-1">
+              Interview Name
+            </label>
             <input
               type="text"
-              className="border-b-2 focus:outline-none border-gray-500 px-2 w-96 py-0.5 ml-3"
-              placeholder="e.g. Name of the Interview"
+              className="border border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 bg-white/80 backdrop-blur-sm rounded-md px-3 py-2 text-sm w-full transition"
+              placeholder="e.g. Java Backend Screening"
               value={name}
               onChange={(e) => setName(e.target.value)}
               onBlur={(e) => setName(e.target.value.trim())}
             />
           </div>
-          <h3 className="text-sm mt-3 font-medium">Select an Interviewer:</h3>
-          <div className="relative flex items-center mt-1">
+
+          {/* Select Interviewer */}
+          <label className="text-sm mt-5 font-medium text-gray-700">
+            Select an Interviewer
+          </label>
+          <div className="relative flex items-center mt-2">
             <div
               id="slider-3"
-              className=" h-36 pt-1 overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide w-[27.5rem]"
+              className="h-36 pt-1 overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide w-[27.5rem]"
             >
-              {interviewers.map((item, key) => (
+              {interviewers.map((item) => (
                 <div
-                  className=" p-0 inline-block cursor-pointer ml-1 mr-5 rounded-xl shrink-0 overflow-hidden"
+                  className="inline-block cursor-pointer mx-3 text-center"
                   key={item.id}
                 >
                   <button
-                    className="absolute ml-9"
+                    className="absolute ml-8 mt-1"
                     onClick={(e) => {
                       e.stopPropagation();
                       setInterviewerDetails(item);
                       setOpenInterviewerDetails(true);
                     }}
                   >
-                    <Info size={18} color="#4f46e5" strokeWidth={2.2} />
+                    <Info size={18} className="text-indigo-600" strokeWidth={2.2} />
                   </button>
+
                   <div
-                    className={`w-[96px] overflow-hidden rounded-full ${
-                      selectedInterviewer === item.id
-                        ? "border-4 border-indigo-600"
-                        : ""
-                    }`}
+                    className={`w-[96px] rounded-full border-4 transition-all ${selectedInterviewer === item.id
+                      ? "border-indigo-600 shadow-md shadow-indigo-200"
+                      : "border-transparent"
+                      }`}
                     onClick={() => setSelectedInterviewer(item.id)}
                   >
                     <Image
                       src={item.image}
-                      alt="Picture of the interviewer"
+                      alt="Interviewer"
                       width={70}
                       height={70}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-full"
                     />
                   </div>
-                  <CardTitle className="mt-0 text-xs text-center">
+                  <CardTitle className="mt-1 text-xs font-medium text-gray-700">
                     {item.name}
                   </CardTitle>
                 </div>
               ))}
             </div>
-            {interviewers.length > 4 ? (
-              <div className="flex-row justify-center ml-3 mb-1 items-center space-y-6">
+
+            {interviewers.length > 4 && (
+              <div className="flex flex-col justify-center ml-4 space-y-4">
                 <ChevronRight
                   className="opacity-50 cursor-pointer hover:opacity-100"
-                  size={27}
+                  size={24}
                   onClick={() => slideRight("slider-3", 115)}
                 />
                 <ChevronLeft
                   className="opacity-50 cursor-pointer hover:opacity-100"
-                  size={27}
+                  size={24}
                   onClick={() => slideLeft("slider-3", 115)}
                 />
               </div>
-            ) : (
-              <></>
             )}
           </div>
-          <h3 className="text-sm font-medium">Objective:</h3>
+
+          {/* Objective */}
+          <label className="text-sm font-medium mt-3 text-gray-700">Objective</label>
           <Textarea
             value={objective}
-            className="h-24 mt-2 border-2 border-gray-500 w-[33.2rem]"
-            placeholder="e.g. Find best candidates based on their technical skills and previous projects."
+            className="h-24 mt-2 border border-indigo-200 bg-white/80 backdrop-blur-sm rounded-md focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 w-[33.2rem] text-sm transition"
+            placeholder="e.g. Evaluate technical problem solving & backend design skills."
             onChange={(e) => setObjective(e.target.value)}
             onBlur={(e) => setObjective(e.target.value.trim())}
           />
-          <h3 className="text-sm font-medium mt-2">
-            Upload any documents related to the interview.
-          </h3>
+
+          {/* Document Upload */}
+          <label className="text-sm font-medium mt-4 text-gray-700">
+            Upload Documents (Optional)
+          </label>
           <FileUpload
             isUploaded={isUploaded}
             setIsUploaded={setIsUploaded}
@@ -235,87 +250,80 @@ function DetailsPopup({
             setFileName={setFileName}
             setUploadedDocumentContext={setUploadedDocumentContext}
           />
-          <label className="flex-col mt-7 w-full">
-            <div className="flex items-center cursor-pointer">
-              <span className="text-sm font-medium">
-                Do you prefer the interviewees&apos; responses to be anonymous?
+
+          {/* Anonymous Switch */}
+          <div className="mt-6">
+            <label className="flex items-center cursor-pointer">
+              <span className="text-sm font-medium text-gray-700">
+                Prefer anonymous responses?
               </span>
               <Switch
                 checked={isAnonymous}
-                className={`ml-4 mt-1 ${
-                  isAnonymous ? "bg-indigo-600" : "bg-[#E6E7EB]"
-                }`}
+                className={`ml-4 mt-1 ${isAnonymous ? "bg-indigo-600" : "bg-gray-300"
+                  }`}
                 onCheckedChange={(checked) => setIsAnonymous(checked)}
               />
-            </div>
-            <span
-              style={{ fontSize: "0.7rem", lineHeight: "0.66rem" }}
-              className="font-light text-xs italic w-full text-left block"
-            >
-              Note: If not anonymous, the interviewee&apos;s email and name will
-              be collected.
+            </label>
+            <span className="text-[0.7rem] italic text-gray-500">
+              If disabled, we’ll collect the interviewee’s name and email.
             </span>
-          </label>
-          <div className="flex flex-row gap-3 justify-between w-full mt-3">
-            <div className="flex flex-row justify-center items-center ">
-              <h3 className="text-sm font-medium ">Number of Questions:</h3>
+          </div>
+
+          {/* Number Inputs */}
+          <div className="flex flex-row gap-4 justify-between w-full mt-4">
+
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700">
+                Number of Questions
+              </label>
               <input
                 type="number"
                 step="1"
                 max="5"
                 min="1"
-                className="border-b-2 text-center focus:outline-none  border-gray-500 w-14 px-2 py-0.5 ml-3"
+                className="border border-indigo-200 bg-white/80 rounded-md text-center focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 w-20 py-1 transition text-sm"
                 value={numQuestions}
                 onChange={(e) => {
                   let value = e.target.value;
-                  if (
-                    value === "" ||
-                    (Number.isInteger(Number(value)) && Number(value) > 0)
-                  ) {
-                    if (Number(value) > 5) {
-                      value = "5";
-                    }
+                  if (value === "" || (Number.isInteger(Number(value)) && Number(value) > 0)) {
+                    if (Number(value) > 5) { value = "5" };
                     setNumQuestions(value);
                   }
                 }}
               />
             </div>
-            <div className="flex flex-row justify-center items-center">
-              <h3 className="text-sm font-medium ">Duration (mins):</h3>
+
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700">
+                Duration (mins)
+              </label>
               <input
                 type="number"
                 step="1"
                 max="10"
                 min="1"
-                className="border-b-2 text-center focus:outline-none  border-gray-500 w-14 px-2 py-0.5 ml-3"
+                className="border border-indigo-200 bg-white/80 rounded-md text-center focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 w-20 py-1 transition text-sm"
                 value={duration}
                 onChange={(e) => {
                   let value = e.target.value;
-                  if (
-                    value === "" ||
-                    (Number.isInteger(Number(value)) && Number(value) > 0)
-                  ) {
-                    if (Number(value) > 10) {
-                      value = "10";
-                    }
+                  if (value === "" || (Number.isInteger(Number(value)) && Number(value) > 0)) {
+                    if (Number(value) > 10) { value = "10" };
                     setDuration(value);
                   }
                 }}
               />
             </div>
           </div>
-          <div className="flex flex-row w-full justify-center items-center space-x-24 mt-5">
+
+          {/* Action Buttons */}
+          <div className="flex flex-row w-full justify-center items-center gap-10 mt-7">
             <Button
               disabled={
-                (name &&
-                objective &&
-                numQuestions &&
-                duration &&
-                selectedInterviewer != BigInt(0)
+                (name && objective && numQuestions && duration && selectedInterviewer != BigInt(0)
                   ? false
                   : true) || isClicked
               }
-              className="bg-indigo-600 hover:bg-indigo-800  w-40"
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 w-40 shadow-md shadow-indigo-200 text-white transition"
               onClick={() => {
                 setIsClicked(true);
                 onGenrateQuestions();
@@ -325,15 +333,11 @@ function DetailsPopup({
             </Button>
             <Button
               disabled={
-                (name &&
-                objective &&
-                numQuestions &&
-                duration &&
-                selectedInterviewer != BigInt(0)
+                (name && objective && numQuestions && duration && selectedInterviewer != BigInt(0)
                   ? false
                   : true) || isClicked
               }
-              className="bg-indigo-600 w-40 hover:bg-indigo-800"
+              className="bg-indigo-600 hover:bg-indigo-800 text-white w-40 shadow shadow-indigo-200"
               onClick={() => {
                 setIsClicked(true);
                 onManual();
@@ -344,6 +348,7 @@ function DetailsPopup({
           </div>
         </div>
       </div>
+
       <Modal
         open={openInterviewerDetails}
         closeOnOutsideClick={true}

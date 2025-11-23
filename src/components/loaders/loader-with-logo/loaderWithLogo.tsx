@@ -12,7 +12,6 @@ function LoaderWithLogo() {
         className="object-cover object-center mx-auto mb-4"
       />
       <div className="flex flex-row items-center mx-auto">
-        {/* <p>Let us take a .....</p> */}
         <div className={styles.loader} />
       </div>
     </div>

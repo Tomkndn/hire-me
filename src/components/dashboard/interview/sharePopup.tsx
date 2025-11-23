@@ -76,100 +76,124 @@ function SharePopup({ open, onClose, shareContent }: SharePopupProps) {
 
   return (
     <Modal open={open} closeOnOutsideClick={false} onClose={onClose}>
-      <div className="w-[28rem] flex flex-col">
-        <p className="text-lg font-semibold mb-4">Share via:</p>
-        <div className="h-auto rounded-xl">
+      <div className="w-[30rem] flex flex-col p-1">
+        <p className="text-xl font-semibold mb-4 text-slate-800">Share via</p>
+
+        <div className="rounded-2xl bg-white border border-slate-200 p-4 shadow-sm">
           <Tabs
             value={activeTab}
             className="flex flex-col h-full"
             onValueChange={setActiveTab}
           >
-            <div className="w-auto">
-              <TabsList>
-                {/* <TabsTrigger value="mail">Mail</TabsTrigger> */}
-                <TabsTrigger value="copy">URL</TabsTrigger>
-                <TabsTrigger value="embed">Embed</TabsTrigger>
-              </TabsList>
-            </div>
-            <div>
-              {/* <TabsContent value="mail" className="w-full"> </TabsContent> */}
-              <TabsContent value="copy" className="w-full">
-                <div className="mb-4">
+            <TabsList className="grid w-full grid-cols-2 rounded-lg bg-slate-100 mb-3">
+              <TabsTrigger
+                value="copy"
+                className="data-[state=active]:bg-indigo-600 
+                       data-[state=active]:text-white rounded-md text-sm"
+              >
+                URL
+              </TabsTrigger>
+              <TabsTrigger
+                value="embed"
+                className="data-[state=active]:bg-indigo-600 
+                       data-[state=active]:text-white rounded-md text-sm"
+              >
+                Embed
+              </TabsTrigger>
+            </TabsList>
+
+            {/* URL */}
+            <TabsContent value="copy" className="w-full">
+              <div className="mb-4">
+                <input
+                  type="text"
+                  value={url}
+                  className="w-full px-3 py-2 text-sm rounded-lg bg-slate-50 
+                  border border-slate-300 focus:outline-none cursor-text"
+                  readOnly
+                />
+              </div>
+
+              <Button
+                className={`flex items-center text-sm font-medium rounded-lg h-9 
+                        ${copiedLink ? "bg-green-600" : "bg-indigo-600"} w-full`}
+                onClick={copyLinkToClipboard}
+              >
+                <Copy size={16} className="mr-2" />
+                {copiedLink ? "Copied" : "Copy URL"}
+              </Button>
+            </TabsContent>
+
+            {/* EMBED */}
+            <TabsContent value="embed" className="w-full">
+              <div className="mb-4">
+                <input
+                  type="text"
+                  value={embedCode}
+                  className="w-full px-3 py-2 text-sm rounded-lg bg-slate-50 
+                  border border-slate-300 focus:outline-none cursor-text"
+                  readOnly
+                />
+              </div>
+
+              <div className="flex gap-4 mb-4">
+                <div className="flex flex-col w-1/2">
+                  <label htmlFor="width" className="text-sm text-slate-600 mb-1">
+                    Width (px)
+                  </label>
+
                   <input
-                    type="text"
-                    value={url}
-                    className="w-full p-2 border border-gray-300 bg-gray-100 rounded"
-                    readOnly
+                    id="width"
+                    type="number"
+                    min="1050"
+                    placeholder="Width"
+                    value={embedWidth}
+                    className="w-full px-3 py-2 text-sm rounded-lg border 
+                           border-slate-300 focus:outline-none"
+                    onChange={(e) => setEmbedWidth(Number(e.target.value))}
+                    onBlur={(e) => {
+                      const value = Math.max(1050, Number(e.target.value));
+                      setEmbedWidth(value);
+                    }}
                   />
                 </div>
-                <Button
-                  className="flex items-center bg-indigo-600"
-                  onClick={copyLinkToClipboard}
-                >
-                  <Copy size={16} className="mr-2" />
-                  {copiedLink ? "Copied" : "Copy URL"}
-                </Button>
-              </TabsContent>
-              <TabsContent value="embed" className="w-full">
-                <div className="mb-4">
+
+                <div className="flex flex-col w-1/2">
+                  <label htmlFor="height" className="text-sm text-slate-600 mb-1">
+                    Height (px)
+                  </label>
+
                   <input
-                    type="text"
-                    value={embedCode}
-                    className="w-full p-2 border border-gray-300 bg-gray-100 rounded"
-                    readOnly
+                    id="height"
+                    type="number"
+                    min="700"
+                    placeholder="Height"
+                    value={embedHeight}
+                    className="w-full px-3 py-2 text-sm rounded-lg border 
+                           border-slate-300 focus:outline-none"
+                    onChange={(e) => setEmbedHeight(Number(e.target.value))}
+                    onBlur={(e) => {
+                      const value = Math.max(700, Number(e.target.value));
+                      setEmbedHeight(value);
+                    }}
                   />
                 </div>
-                <div className="flex space-x-4 mb-4">
-                  <div className="flex flex-col w-1/2">
-                    <label htmlFor="width" className="mb-1">
-                      Width (px)
-                    </label>
-                    <input
-                      id="width"
-                      type="number"
-                      min="1050"
-                      placeholder="Width"
-                      value={embedWidth}
-                      className="w-full p-2 border border-gray-300 rounded"
-                      onChange={(e) => setEmbedWidth(Number(e.target.value))}
-                      onBlur={(e) => {
-                        const value = Math.max(1050, Number(e.target.value));
-                        setEmbedWidth(value);
-                      }}
-                    />
-                  </div>
-                  <div className="flex flex-col w-1/2">
-                    <label htmlFor="height" className="mb-1">
-                      Height (px)
-                    </label>
-                    <input
-                      id="height"
-                      type="number"
-                      min="700"
-                      placeholder="Height"
-                      value={embedHeight}
-                      className="w-full p-2 border border-gray-300 rounded"
-                      onChange={(e) => setEmbedHeight(Number(e.target.value))}
-                      onBlur={(e) => {
-                        const value = Math.max(700, Number(e.target.value));
-                        setEmbedHeight(value);
-                      }}
-                    />
-                  </div>
-                </div>
-                <Button
-                  className="flex items-center bg-indigo-600"
-                  onClick={copyEmbedToClipboard}
-                >
-                  <Copy size={16} className="mr-2" />
-                  {copiedEmbed ? "Copied" : "Copy Embed Code"}
-                </Button>
-              </TabsContent>
-            </div>
+              </div>
+
+              <Button
+                className={`flex items-center text-sm font-medium rounded-lg h-9 w-full 
+                        ${copiedEmbed ? "bg-green-600" : "bg-indigo-600"}`}
+                onClick={copyEmbedToClipboard}
+              >
+                <Copy size={16} className="mr-2" />
+                {copiedEmbed ? "Copied" : "Copy Embed Code"}
+              </Button>
+            </TabsContent>
           </Tabs>
         </div>
       </div>
     </Modal>
+
   );
 }
 

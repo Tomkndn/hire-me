@@ -13,17 +13,25 @@ function QuestionAnswerCard({
 }: QuestionCardProps) {
   return (
     <>
-      <div className=" shadow-md mb-2 bg-slate-50 rounded-2xl py-2">
-        <div className="flex flex-row items-center	">
-          <CardTitle className="text-lg min-w-[42px] bg-indigo-200 rounded-full p-1 mx-3">
-            <p className="my-auto text-center">{questionNumber}</p>
-          </CardTitle>
-          <div className="flex flex-col p-1">
-            <p className="font-medium">{question}</p>
-            <p>{answer}</p>
+      <div className="bg-white shadow-sm border border-slate-200 rounded-xl p-3 mb-3 hover:shadow-md transition">
+        <div className="flex items-start gap-3">
+          {/* Number */}
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-500 text-white font-semibold text-base">
+            {questionNumber}
+          </div>
+
+          {/* Question + Answer */}
+          <div className="flex flex-col">
+            <p className="font-semibold text-slate-900 leading-tight">
+              {question}
+            </p>
+            <p className="text-slate-600 text-sm mt-1">
+              {answer}
+            </p>
           </div>
         </div>
       </div>
+
     </>
   );
 }

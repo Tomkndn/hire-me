@@ -31,34 +31,52 @@ export function FeedbackForm({ onSubmit, email }: FeedbackFormProps) {
   };
 
   return (
-    <div className="p-4">
-      <h3 className="text-lg font-semibold mb-4">
+    <div className="p-5 bg-white rounded-2xl shadow-sm border border-indigo-100 max-w-md mx-auto">
+      <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">
         Are you satisfied with the platform?
       </h3>
-      <div className="flex justify-center space-x-4 mb-4">
+
+      {/* Emoji Selection */}
+      <div className="flex justify-center gap-3 mb-4">
         {Object.values(SatisfactionLevel).map((emoji) => (
           <button
             key={emoji}
-            className={`text-3xl ${satisfaction === emoji ? "border-2 border-indigo-600" : ""}`}
-            onClick={() => setSatisfaction(emoji)}
+            className={`text-3xl transition-all duration-200 p-2 rounded-xl 
+              hover:scale-110 hover:bg-indigo-50 
+              ${satisfaction === emoji
+                ? "bg-indigo-100 border-2 border-indigo-500 scale-110"
+                : "border border-transparent"
+              }
+              `}
+              onClick={() => setSatisfaction(emoji)}
           >
             {emoji}
           </button>
         ))}
       </div>
+
+      {/* Feedback Input */}
       <Textarea
         value={feedback}
-        placeholder="Add your feedback here"
-        className="mb-4"
+        placeholder="Share your thoughts..."
+        className="mb-4 rounded-xl border-indigo-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
         onChange={(e) => setFeedback(e.target.value)}
       />
+
+      {/* Submit Button */}
       <Button
         disabled={satisfaction === null && feedback.trim() === ""}
-        className="w-full bg-indigo-600 text-white"
-        onClick={handleSubmit}
+        className={`w-full rounded-xl text-white font-medium transition 
+          ${satisfaction === null && feedback.trim() === ""
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-indigo-600 hover:bg-indigo-700"
+          }
+          `}
+          onClick={handleSubmit}
       >
         Submit Feedback
       </Button>
     </div>
+
   );
 }

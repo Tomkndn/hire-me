@@ -100,83 +100,84 @@ function QuestionsPopup({ interviewData, setProceed, setOpen }: Props) {
   }, [questions.length]);
 
   return (
-    <div>
-      <div
-        className={`text-center px-1 flex flex-col justify-top items-center w-[38rem] ${
-          interviewData.question_count > 1 ? "h-[29rem]" : ""
-        } `}
-      >
-        <div className="relative flex justify-center w-full">
-          <ChevronLeft
-            className="absolute left-0 opacity-50 cursor-pointer hover:opacity-100 text-gray-600 mr-36"
-            size={30}
-            onClick={() => {
-              setProceed(false);
-            }}
-          />
-          <h1 className="text-2xl font-semibold">Create Interview</h1>
-        </div>
-        <div className="my-3 text-left w-[96%] text-sm">
-          We will be using these questions during the interviews. Please make
-          sure they are ok.
-        </div>
-        <ScrollArea className="flex flex-col justify-center items-center w-full mt-3">
-          {questions.map((question, index) => (
-            <QuestionCard
-              key={question.id}
-              questionNumber={index + 1}
-              questionData={question}
-              onDelete={handleDeleteQuestion}
-              onQuestionChange={handleInputChange}
-            />
-          ))}
-          <div ref={endOfListRef} />
-        </ScrollArea>
-        {questions.length < interviewData.question_count ? (
-          <div
-            className="border-indigo-600 opacity-75 hover:opacity-100 w-fit  rounded-full"
-            onClick={handleAddQuestion}
+    <div className="space-y-4">
+
+      {/* Header + Back */}
+      <div className="flex flex-col justify-center items-center w-[38rem] mx-auto">
+        <div className="relative w-full flex justify-center items-center py-1">
+          <button
+            className="absolute left-0 p-1 rounded-lg hover:bg-slate-100 transition"
+            onClick={() => setProceed(false)}
           >
-            <Plus
-              size={45}
-              strokeWidth={2.2}
-              className="text-indigo-600  cursor-pointer"
-            />
+            <ChevronLeft size={28} className="text-gray-600" />
+          </button>
+          <h1 className="text-2xl font-semibold text-gray-900">Create Interview</h1>
+        </div>
+
+        <p className="mt-2 text-sm text-left w-full text-gray-600 px-1">
+          We will be using these questions during the interview. Please ensure they are appropriate and well-written.
+        </p>
+
+        {/* Scroll Area for Question Cards */}
+        <ScrollArea
+          className={`mt-3 w-full px-1 ${interviewData.question_count > 1 ? "h-[29rem]" : ""}`}
+        >
+          <div className="flex flex-col gap-4 pr-1">
+            {questions.map((question, index) => (
+              <QuestionCard
+                key={question.id}
+                questionNumber={index + 1}
+                questionData={question}
+                onDelete={handleDeleteQuestion}
+                onQuestionChange={handleInputChange}
+              />
+            ))}
+            <div ref={endOfListRef} />
           </div>
-        ) : (
-          <></>
+        </ScrollArea>
+
+        {/* Add Question Button */}
+        {questions.length < interviewData.question_count && (
+          <button
+          className="mt-4 group rounded-full bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 p-3 transition cursor-pointer"
+          onClick={handleAddQuestion}
+          >
+            <Plus size={40} className="text-indigo-600 group-hover:scale-110 transition" />
+          </button>
         )}
       </div>
-      <p className="mt-3 mb-1 ml-2 font-medium">
-        Interview Description{" "}
-        <span
-          style={{ fontSize: "0.7rem", lineHeight: "0.66rem" }}
-          className="font-light text-xs italic w-full text-left block"
-        >
-          Note: Interviewees will see this description.
-        </span>
-      </p>
-      <textarea
-        value={description}
-        className="h-fit mt-3 mx-2 py-2 border-2 rounded-md px-2 w-full border-gray-400"
-        placeholder="Enter your interview description."
-        rows={3}
-        onChange={(e) => {
-          setDescription(e.target.value);
-        }}
-        onBlur={(e) => {
-          setDescription(e.target.value.trim());
-        }}
-      />
-      <div className="flex flex-row justify-end items-end w-full">
+
+      {/* Interview Description */}
+      <div className="px-2">
+        <label className="block font-medium text-gray-800 mb-1">
+          Interview Description
+          <span className="block text-xs italic text-gray-500 font-light">
+            Note: This description will be visible to the interviewee.
+          </span>
+        </label>
+
+        <textarea
+          value={description}
+          placeholder="Enter a short description for this interview."
+          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white
+      focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100
+      hover:border-gray-400 transition"
+          rows={3}
+          onChange={(e) => setDescription(e.target.value)}
+          onBlur={(e) => setDescription(e.target.value.trim())}
+        />
+      </div>
+
+      {/* Save Button */}
+      <div className="flex justify-end w-full">
         <Button
           disabled={
             isClicked ||
             questions.length < interviewData.question_count ||
             description.trim() === "" ||
-            questions.some((question) => question.question.trim() === "")
+            questions.some((q) => q.question.trim() === "")
           }
-          className="bg-indigo-600 hover:bg-indigo-800 mr-5 mt-2"
+          className="bg-indigo-600 hover:bg-indigo-800 mr-5 mt-2 transition"
           onClick={() => {
             setIsClicked(true);
             onSave();
@@ -186,6 +187,7 @@ function QuestionsPopup({ interviewData, setProceed, setOpen }: Props) {
         </Button>
       </div>
     </div>
+
   );
 }
 export default QuestionsPopup;

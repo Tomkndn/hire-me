@@ -27,6 +27,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { NumberInput } from "./create-popup/NumberInput";
 
 type EditInterviewProps = {
   interview: Interview | undefined;
@@ -45,7 +46,7 @@ function EditInterview({ interview }: EditInterviewProps) {
   const [numQuestions, setNumQuestions] = useState<number>(
     interview?.question_count || 1,
   );
-  const [duration, setDuration] = useState<Number>(
+  const [duration, setDuration] = useState<number>(
     Number(interview?.time_duration),
   );
   const [questions, setQuestions] = useState<Question[]>(
@@ -156,27 +157,28 @@ function EditInterview({ interview }: EditInterviewProps) {
   }, [questions.length]);
 
   return (
-    <div className=" h-screen z-[10] mx-2">
-      <div className="flex flex-col bg-gray-200 rounded-md min-h-[120px] p-2 pl-4">
-        <div>
-          <div
-            className="mt-2 ml-1 pr-2 inline-flex items-center text-indigo-600 hover:cursor-pointer"
-            onClick={() => {
-              router.push(`/interviews/${interview?.id}`);
-            }}
-          >
-            <ArrowLeft className="mr-2" />
-            <p className="text-sm font-semibold">Back to Summary</p>
-          </div>
+    <div className="h-screen z-[10] mx-2">
+      <div className="flex flex-col bg-gray-100 rounded-md min-h-[120px] p-4 shadow-sm">
+
+        {/* Back Button */}
+        <div
+          className="flex items-center text-indigo-600 hover:text-indigo-800 cursor-pointer w-fit"
+          onClick={() => router.push(`/interviews/${interview?.id}`)}
+        >
+          <ArrowLeft size={18} className="mr-1" />
+          <span className="text-sm font-semibold">Back to Summary</span>
         </div>
-        <div className="flex flex-row justify-between">
-          <p className="mt-3 mb-1 ml-2 font-medium">
-            Interview Description{" "}
-            <span className="text-xs ml-2 font-normal">
-              (Your respondents will see this.)
+
+        {/* Description + Action Buttons */}
+        <div className="flex justify-between items-center mt-3">
+          <p className="font-medium text-sm ml-1">
+            Interview Description
+            <span className="text-xs ml-2 font-normal text-gray-600">
+              (Visible to interviewees)
             </span>
           </p>
-          <div className="flex flex-row gap-3">
+
+          <div className="flex gap-3 items-center">
             <Button
               disabled={isClicked}
               className="bg-indigo-600 hover:bg-indigo-800 mt-2"
@@ -185,15 +187,17 @@ function EditInterview({ interview }: EditInterviewProps) {
                 onSave();
               }}
             >
-              Save <SaveIcon size={16} className="ml-2" />
+              Save
+              <SaveIcon size={16} className="ml-2" />
             </Button>
+
             <AlertDialog>
               <AlertDialogTrigger>
                 <Button
                   disabled={isClicked}
-                  className="bg-red-500 hover:bg-red-600 mr-5 mt-2 p-2"
+                  className="bg-red-500 hover:bg-red-600 mt-2 p-2"
                 >
-                  <TrashIcon size={16} className="" />
+                  <TrashIcon size={16} />
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -208,9 +212,7 @@ function EditInterview({ interview }: EditInterviewProps) {
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-indigo-600 hover:bg-indigo-800"
-                    onClick={async () => {
-                      await onDeleteInterviewClick();
-                    }}
+                    onClick={onDeleteInterviewClick}
                   >
                     Continue
                   </AlertDialogAction>
@@ -219,138 +221,102 @@ function EditInterview({ interview }: EditInterviewProps) {
             </AlertDialog>
           </div>
         </div>
+
+        {/* Description Input */}
         <textarea
           value={description}
-          className="h-fit mt-3 ml-2 py-2 border-2 rounded-md w-[75%] px-2 border-gray-400"
+          className="input-textarea"
           placeholder="Enter your interview description here."
           rows={3}
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-          onBlur={(e) => {
-            setDescription(e.target.value.trim());
-          }}
+          onChange={(e) => setDescription(e.target.value)}
+          onBlur={(e) => setDescription(e.target.value.trim())}
         />
-        <p className="mt-3 mb-1 ml-2 font-medium">Objective</p>
+
+        {/* Objective Input */}
+        <p className="mt-3 mb-1 ml-1 font-medium text-sm">Objective</p>
         <textarea
           value={objective}
-          className="h-fit mt-3 ml-2 py-2 border-2 rounded-md w-[75%] px-2 border-gray-400"
+          className="input-textarea"
           placeholder="Enter your interview objective here."
           rows={3}
           onChange={(e) => setObjective(e.target.value)}
           onBlur={(e) => setObjective(e.target.value.trim())}
         />
-        <div className="flex flex-row gap-3">
-          <div>
-            <p className="mt-3 mb-1 ml-2 font-medium">Interviewer</p>
-            <div className=" flex items-center mt-1">
-              <div
-                id="slider-3"
-                className=" h-32 pt-1 ml-2 overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide w-[27.5rem]"
-              >
-                {interviewers.map((item) => (
+
+        {/* Interviewer Section */}
+        <div className="mt-4">
+          <p className="mb-1 ml-1 font-medium text-sm">Interviewer</p>
+          <div className="flex items-center">
+            <div
+              id="slider-3"
+              className="h-32 pt-1 ml-1 overflow-x-auto whitespace-nowrap scroll-smooth scrollbar-hide w-[27.5rem]"
+            >
+              {interviewers.map((item) => (
+                <div
+                  className="inline-block px-2 cursor-pointer hover:scale-105 duration-300"
+                  key={item.id}
+                >
                   <div
-                    className=" p-0 inline-block cursor-pointer hover:scale-105 ease-in-out duration-300  ml-1 mr-3 rounded-xl shrink-0 overflow-hidden"
-                    key={item.id}
-                  >
-                    <div
-                      className={`w-[96px] overflow-hidden rounded-full ${
-                        selectedInterviewer === item.id
-                          ? "border-4 border-indigo-600"
-                          : ""
+                    className={`w-[96px] h-[96px] overflow-hidden rounded-full border-4 ${selectedInterviewer === item.id
+                        ? "border-indigo-600"
+                        : "border-transparent"
                       }`}
-                      onClick={() => {
-                        setSelectedInterviewer(item.id);
-                      }}
-                    >
-                      <Image
-                        src={item.image}
-                        alt="Picture of the interviewer"
-                        width={70}
-                        height={70}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <CardTitle className="mt-0 text-xs text-center">
-                      {item.name}
-                    </CardTitle>
+                    onClick={() => setSelectedInterviewer(item.id)}
+                  >
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                ))}
-              </div>
+                  <p className="text-center text-xs mt-1">{item.name}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-        <label className="flex-col mt-2 ml-2 w-full">
+
+        {/* Anonymous Switch */}
+        <label className="flex flex-col mt-3 ml-1">
           <div className="flex items-center cursor-pointer">
             <span className="text-sm font-medium">
-              Do you prefer the interviewees&apos; responses to be anonymous?
+              Should responses be anonymous?
             </span>
             <Switch
               checked={isAnonymous}
-              className={`ml-4 mt-1 border-2 border-gray-300 ${
-                isAnonymous ? "bg-indigo-600" : "bg-white"
-              }`}
-              onCheckedChange={(checked) => setIsAnonymous(checked)}
+              className="ml-4 mt-1 border-2 border-gray-300"
+              onCheckedChange={setIsAnonymous}
             />
           </div>
-          <span
-            style={{ fontSize: "0.7rem", lineHeight: "0.66rem" }}
-            className="font-light text-xs italic w-full text-left block"
-          >
-            Note: If not anonymous, the interviewee&apos;s email and name will
-            be collected.
+          <span className="text-xs italic text-gray-600 mt-1">
+            If disabled, respondent email & name will be collected.
           </span>
         </label>
-        <div className="flex flex-row justify-between w-[75%] gap-3 ml-2">
-          <div className="flex flex-row justify-center items-center mt-5 ">
-            <h3 className="font-medium ">No. of Questions:</h3>
-            <input
-              type="number"
-              step="1"
-              max="5"
-              min={questions.length.toString()}
-              className="border-2 text-center focus:outline-none  bg-slate-100 rounded-md border-gray-500 w-14 px-2 py-0.5 ml-3"
-              value={numQuestions}
-              onChange={(e) => {
-                let value = e.target.value;
-                if (
-                  value === "" ||
-                  (Number.isInteger(Number(value)) && Number(value) > 0)
-                ) {
-                  if (Number(value) > 5) {
-                    value = "5";
-                  }
-                  setNumQuestions(Number(value));
-                }
-              }}
-            />
-          </div>
-          <div className="flex flex-row items-center mt-5">
-            <h3 className="font-medium ">Duration (mins):</h3>
-            <input
-              type="number"
-              step="1"
-              max="10"
-              min="1"
-              className="border-2 text-center focus:outline-none bg-slate-100 rounded-md border-gray-500 w-14 px-2 py-0.5 ml-3"
-              value={Number(duration)}
-              onChange={(e) => {
-                let value = e.target.value;
-                if (
-                  value === "" ||
-                  (Number.isInteger(Number(value)) && Number(value) > 0)
-                ) {
-                  if (Number(value) > 10) {
-                    value = "10";
-                  }
-                  setDuration(Number(value));
-                }
-              }}
-            />
-          </div>
+
+        {/* Question Inputs */}
+        <div className="flex w-[75%] justify-between gap-3 ml-1 mt-4">
+          <NumberInput
+            label="No. of Questions:"
+            value={numQuestions}
+            max={5}
+            min={questions.length}
+            onChange={setNumQuestions}
+          />
+          <NumberInput
+            label="Duration (mins):"
+            value={duration}
+            max={10}
+            min={1}
+            onChange={setDuration}
+          />
         </div>
-        <p className="mt-3 mb-1 ml-2 font-medium">Questions</p>
-        <ScrollArea className="flex ml-2 p-2 pr-4 mb-4 flex-col justify-center items-center w-[75%] max-h-[500px] bg-slate-100 rounded-md text-sm mt-3">
+
+        {/* Questions Section */}
+        <p className="mt-3 mb-1 ml-1 font-medium text-sm">Questions</p>
+
+        <ScrollArea className="questions-scroll">
           {questions.map((question, index) => (
             <QuestionCard
               key={question.id}
@@ -360,24 +326,19 @@ function EditInterview({ interview }: EditInterviewProps) {
               onQuestionChange={handleInputChange}
             />
           ))}
-          <div ref={endOfListRef} />
-          {questions.length < numQuestions ? (
+
+          {questions.length < numQuestions && (
             <div
-              className="border-indigo-600 opacity-75 hover:opacity-100 w-fit text-center rounded-full mx-auto"
+              className="text-center w-fit mx-auto mt-2 cursor-pointer opacity-80 hover:opacity-100"
               onClick={handleAddQuestion}
             >
-              <Plus
-                size={45}
-                strokeWidth={2.2}
-                className="text-indigo-600 text-center cursor-pointer"
-              />
+              <Plus size={45} className="text-indigo-600" strokeWidth={2.2} />
             </div>
-          ) : (
-            <></>
           )}
         </ScrollArea>
       </div>
     </div>
+
   );
 }
 
